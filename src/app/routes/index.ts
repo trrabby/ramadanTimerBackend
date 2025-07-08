@@ -1,9 +1,7 @@
 import { Router } from 'express';
 import { UserRoutes } from '../modules/users/user.route';
 import { AuthRoutes } from '../modules/auth/auth.route';
-import { orderRoute } from '../modules/order/order.route';
-import { paymentRoute } from '../modules/payments/payment.route';
-import { cMealRoutes } from '../modules/cusomizedMeal/cMeal.route';
+import { projectRoutes } from '../modules/projects/project.routes';
 
 const router = Router();
 
@@ -17,16 +15,8 @@ const moduleRoutes = [
     route: UserRoutes,
   },
   {
-    path: '/meals',
-    route: cMealRoutes,
-  },
-  {
-    path: '/orders',
-    route: orderRoute,
-  },
-  {
-    path: '/payments',
-    route: paymentRoute,
+    path: '/projects',
+    route: projectRoutes,
   },
 ];
 

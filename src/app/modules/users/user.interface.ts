@@ -5,15 +5,15 @@ export interface IUser {
   name: string;
   email: string;
   password: string;
-  city: string;
-  colony: string;
-  postOffice: string;
-  subDistrict: string;
-  number: string;
+  city?: string;
+  colony?: string;
+  postOffice?: string;
+  subDistrict?: string;
+  number?: string;
   needsPasswordChange: boolean;
   passwordChangedAt?: Date;
   imgUrl?: string;
-  role: 'admin' | 'mealProvider' | 'customer';
+  role: 'admin' | 'reader' | 'editor';
   isDeleted: boolean;
   status: 'active' | 'blocked';
 }

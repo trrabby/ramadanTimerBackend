@@ -21,23 +21,18 @@ const userSchema = new Schema<IUser, UserModelStatic>(
     },
     city: {
       type: String,
-      required: true,
     },
     colony: {
       type: String,
-      required: true,
     },
     postOffice: {
       type: String,
-      required: true,
     },
     subDistrict: {
       type: String,
-      required: true,
     },
     number: {
       type: String,
-      required: true,
     },
 
     imgUrl: {
@@ -52,11 +47,10 @@ const userSchema = new Schema<IUser, UserModelStatic>(
     passwordChangedAt: {
       type: Date,
     },
-
     role: {
       type: String,
-      enum: ['admin', 'mealProvider', 'customer'],
-      default: 'customer',
+      enum: ['admin', 'reader', 'editor'],
+      default: 'reader',
     },
 
     status: {
