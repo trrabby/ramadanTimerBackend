@@ -1,59 +1,34 @@
-# Prestige Wheels, a Car Store Management App, Backend with Express and TypeScript
+# Portfolio Site
 
-This project is a Car Store management Application API built using **Express**, **TypeScript**, and **MongoDB** with **Mongoose**. The application allows CRUD operations for managing cars and orders, provides inventory management, and calculates revenue using MongoDB aggregation.
+Netlify: [![Live Site](https://img.shields.io/badge/Live%20Site-Portfolio%20Site-brightgreen)](https://towfiq-portfolio.netlify.app)
+
+Welcome to my portfolio site! This repository contains the source code for my personal portfolio, showcasing my projects and skills as a MERN stack developer.
+
+## Overview
+
+This portfolio site serves as a platform to showcase my work, skills, and experience in web development. It includes details about my projects, my skills, and a way to contact me.
 
 ## Features
 
-- **Authenticatin**: Role based Auth, JWT, Access Token, Refresh Token, Change Password.
-- **User Management**: Create, read, update, delete, and search for user.
-- **Car Management**: Create, read, update, delete, and search for cars.
-- **Order Management**: Place orders and automatically manage car inventory.
-- **Revenue Calculation**: Calculate total revenue using MongoDB aggregation.
-- **Data Validation**: Ensure data integrity with Mongoose schema validations.
-- **Error Handling**: Generic error response for validation and server errors.
+- **Project Showcase**: A collection of my projects with descriptions, live links, and source code links.
+- **Skills**: A detailed list of my technical skills.
+- **Contact**: A contact form to get in touch with me.
+- **Responsive Design**: Ensures usability across different devices and screen sizes.
 
----
+## Technologies Used
 
-## Project Structure
+- **React**: For building the user interface.
+- **Firebase**: For hosting the live site.
+- **Tailwind CSS**: For styling the components.
+- **React Router**: For client-side routing.
+- **Node.js**: For the server-side logic.
+- **MongoDB**: For the database.
 
-````plaintext
-src/
-├── app/
-│   ├── modules/
-│   │   ├── auth/
-│   │   │   ├── auth.controller.ts
-│   │   │   ├── auth.route.ts
-│   │   │   ├── auth.service.ts
-│   │   │   ├── auth.model.ts
-│   │   ├── users/
-│   │   │   ├── user.controller.ts
-│   │   │   ├── user.route.ts
-│   │   │   ├── user.service.ts
-│   │   │   ├── user.model.ts
-│   │   ├── car/
-│   │   │   ├── car.controller.ts
-│   │   │   ├── car.route.ts
-│   │   │   ├── car.service.ts
-│   │   │   ├── car.model.ts
-│   │   ├── order/
-│   │       ├── order.controller.ts
-│   │       ├── order.route.ts
-│   │       ├── order.service.ts
-│   │       ├── order.model.ts
-├── server.ts
-├── app.ts
+## Installation
 
+To run the project locally, follow these steps:
 
-## Roadmap for Running the App on Another PC
-
-Follow these steps to run the project on a new machine.
-
-### 1. Clone the Repository
-
-Start by cloning the repository to the new machine:
-
-```bash
-git clone https://github.com/trrabby/prestige-wheels-a4-l2-server.git
-cd prestige-wheels-a4-l2-server
-npm i
-````
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/trrabby/portfolio-server-for-NextJS-portfolio.git
+   ```
