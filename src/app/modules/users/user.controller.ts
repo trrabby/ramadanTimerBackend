@@ -35,8 +35,9 @@ const AllUsers = catchAsync(async (req, res) => {
 
 const updateAUserFun = catchAsync(async (req, res) => {
   const { email } = req.params;
-  const payLoad = req.body;
-
+  const data = JSON.parse(req.body.data);
+  const imgUrl = req.file?.path;
+  const payLoad = { ...data, imgUrl };
   const result = await UserServices.updateAUser(email, payLoad);
   sendResponse(res, {
     statusCode: httpStatus.OK,

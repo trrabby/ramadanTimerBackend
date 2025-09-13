@@ -22,13 +22,13 @@ const userSchema = new Schema<IUser, UserModelStatic>(
     city: {
       type: String,
     },
-    colony: {
+    subDistrict: {
       type: String,
     },
     postOffice: {
       type: String,
     },
-    subDistrict: {
+    colony: {
       type: String,
     },
     number: {

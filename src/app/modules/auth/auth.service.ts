@@ -187,7 +187,7 @@ const refreshToken = async (token: string) => {
   };
 };
 
-const forgetPassword = async (userId: string) => {
+const forgetPassword: any = async (userId: string) => {
   // checking if the user is exist
   const user = await UserModel.isUserExistsByEmail(userId);
 
