@@ -2,13 +2,9 @@ import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 import { ProjectServices } from './project.services';
-import validateRequest from '../../MiddleWares/validateRequest';
-import { projectValidations } from './project.validation';
 import customizedMsg from '../../utils/customisedMsg';
 
 const createProject = catchAsync(async (req, res) => {
-  // console.log(req.files);
-
   const data = JSON.parse(req.body.data);
   const thumbnails = Array.isArray(req.files)
     ? req.files.map((file) => file.path)
@@ -16,8 +12,6 @@ const createProject = catchAsync(async (req, res) => {
 
   const payLoad = { ...data, thumbnails };
   // console.log(payLoad);
-
-  validateRequest(projectValidations.projectValidationSchema);
 
   const result = await ProjectServices.createProject(payLoad);
 
