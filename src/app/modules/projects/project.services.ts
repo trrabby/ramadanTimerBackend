@@ -4,7 +4,7 @@ import QueryBuilder from '../../builder/QueryBuilder';
 import { IProject } from './project.interface';
 import { ProjectModel } from './projects.model';
 
-const carSearchableFields = [
+const ProjectSearchableFields = [
   'projTitle',
   'shortDescription',
   'descriptionOfProject',
@@ -17,7 +17,7 @@ const createProject = async (payload: IProject) => {
 
 const getAllProjects = async (query: Record<string, unknown>) => {
   const projectsQuery = new QueryBuilder(ProjectModel.find(), query)
-    .search(carSearchableFields)
+    .search(ProjectSearchableFields)
     .filter()
     .sort()
     .paginate()
@@ -48,7 +48,7 @@ const updateAProject = async (id: string, payload: Partial<IProject>) => {
 
 const deleteAProject = async (id: string) => {
   const result = await ProjectModel.findOneAndUpdate(
-    { _id: id }, // Match the document where the email matches
+    { _id: id },
     { $set: { isDeleted: true } }, // Add the field `isDeleted` and set it to true
     {
       new: true, // Return the updated document

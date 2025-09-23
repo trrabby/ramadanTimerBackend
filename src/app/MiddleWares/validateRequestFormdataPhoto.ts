@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { AnyZodObject } from 'zod';
 import catchAsync from '../utils/catchAsync';
 
-const validateRequestFormdataOptionalPhoto = (schema: AnyZodObject) => {
+const validateRequestFormdataPhoto = (schema: AnyZodObject) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const Data = JSON.parse(req.body.data);
     const imgUrl = req?.file?.path;
@@ -17,4 +17,4 @@ const validateRequestFormdataOptionalPhoto = (schema: AnyZodObject) => {
   });
 };
 
-export default validateRequestFormdataOptionalPhoto;
+export default validateRequestFormdataPhoto;

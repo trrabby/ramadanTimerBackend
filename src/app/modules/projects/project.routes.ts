@@ -31,7 +31,7 @@ router.patch(
 );
 
 router.put(
-  '/delete-car/:id',
+  '/delete-project/:id',
   auth(USER_ROLE.admin),
   ProjectControllers.deleteAProject,
 );
