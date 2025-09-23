@@ -5,12 +5,14 @@ import catchAsync from '../utils/catchAsync';
 const validateRequestFormdataMustPhotoArray = (schema: AnyZodObject) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const Data = JSON.parse(req.body.data);
-    const imgUrl = Array.isArray(req.files) ? req.files : [];
-    const ParsedData = { ...Data, imgUrl };
-    // console.log(ParsedData);
+    const prevUploadedFiles =
+      JSON.parse(req.body.data).previousUploadedImg || undefined;
+    const newUploads = Array.isArray(req.files) ? req.files : [];
+    const thumbnails = [...prevUploadedFiles, ...newUploads];
+    const ParsedData = { ...Data, thumbnails };
+    console.log(ParsedData);
     await schema.parseAsync({
       body: ParsedData,
-      files: imgUrl,
       cookies: req.cookies,
     });
 

@@ -24,6 +24,9 @@ router.patch(
   '/:id',
   multerUpload.array('files', 5),
   auth(USER_ROLE.admin),
+  validateRequestFormdataMustPhotoArray(
+    projectValidations.updateProjectValidationSchema,
+  ),
   ProjectControllers.updateAProject,
 );
 

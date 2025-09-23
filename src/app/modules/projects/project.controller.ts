@@ -3,6 +3,7 @@ import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 import { ProjectServices } from './project.services';
 import customizedMsg from '../../utils/customisedMsg';
+import AppError from '../../errorHandlers/AppError';
 
 const createProject = catchAsync(async (req, res) => {
   const data = JSON.parse(req.body.data);
@@ -37,7 +38,6 @@ const getAllProjects = catchAsync(async (req, res) => {
 
 const updateAProject = catchAsync(async (req, res) => {
   const { id } = req.params;
-
   const data = JSON.parse(req.body.data);
 
   const thumbnails: string[] = data.previousUploadedImg || [];
@@ -50,7 +50,12 @@ const updateAProject = catchAsync(async (req, res) => {
     thumbnails.push(...newUploadedImgUrl);
   }
   // console.log(imgUrl);
-
+  if (thumbnails.length > 5) {
+    throw new AppError(
+      httpStatus.NOT_ACCEPTABLE,
+      'You can upload maximum 5 images',
+    );
+  }
   const payLoad = { ...data, thumbnails };
   // console.log(payLoad);
   const result = await ProjectServices.updateAProject(id, payLoad);

@@ -21,24 +21,33 @@ const projectValidationSchema = z.object({
     descriptionOfProject: z
       .string()
       .min(1, 'Description of project is required'),
+    thumbnails: z
+      .array(multerFileSchema)
+      .min(1, 'At least one thumbnail is requireddddd')
+      .max(5, 'Maximum 5 thumbnails are allowed'),
   }),
-  files: z
-    .array(multerFileSchema)
-    .min(1, 'At least one thumbnail is required')
-    .max(5),
 });
 
 const updateProjectValidationSchema = z.object({
   body: z.object({
-    projTitle: z.string().optional(),
+    projTitle: z.string().min(1, 'Project title is required').optional(),
     liveLInk: z.string().url('Live link must be a valid URL').optional(),
     serverLink: z.string().url('Server link must be a valid URL').optional(),
     clientLink: z.string().url('Client link must be a valid URL').optional(),
-    shortDescription: z.string().optional(),
-    descriptionOfProject: z.string().optional(),
-    thumbnails: z
-      .array(z.string().url('Thumbnail must be a valid URL'))
+    shortDescription: z
+      .string()
+      .min(1, 'Short description is required')
       .optional(),
+    descriptionOfProject: z
+      .string()
+      .min(1, 'Description of project is required')
+      .optional(),
+    thumbnails: z
+      .array(z.string().url().or(multerFileSchema))
+      .max(5, 'Maximum 5 thumbnails are allowed')
+      .refine((arr) => arr === undefined || arr.length > 0, {
+        message: 'At least one thumbnail is required',
+      }),
   }),
 });
 
