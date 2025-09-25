@@ -1,35 +1,41 @@
 import { Schema, model } from 'mongoose';
-import { IProject } from './project.interface';
+import { IBlog } from './blogs.interface';
 
-const ProjectSchema = new Schema<IProject>(
+const BlogSchema = new Schema<IBlog>(
   {
-    projTitle: {
+    title: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    category: {
       type: String,
       required: true,
     },
-    liveLInk: {
+    author: {
       type: String,
       required: true,
     },
-    clientLink: {
+    authorImg: {
+      type: String,
+    },
+    authorEmail: {
       type: String,
       required: true,
     },
-    serverLink: {
-      type: String,
+    tags: {
+      type: [String],
       required: true,
     },
-    shortDescription: {
-      type: String,
+    content: {
+      type: Schema.Types.Mixed,
       required: true,
     },
-    descriptionOfProject: {
+    coverImage: {
       type: String,
-      required: true,
     },
     thumbnails: {
       type: [String],
-      required: true,
     },
     featured: {
       type: Boolean,
@@ -45,4 +51,4 @@ const ProjectSchema = new Schema<IProject>(
   },
 );
 
-export const ProjectModel = model<IProject>('Project', ProjectSchema);
+export const BlogModel = model<IBlog>('Blog', BlogSchema);

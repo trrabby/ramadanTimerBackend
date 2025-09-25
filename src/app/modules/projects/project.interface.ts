@@ -6,6 +6,7 @@ export interface IProject {
   shortDescription: string;
   descriptionOfProject: string;
   thumbnails: string[];
+  featured?: boolean;
   isDeleted?: boolean;
   createdAt?: Date;
 }
