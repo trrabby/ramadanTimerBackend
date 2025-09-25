@@ -73,6 +73,7 @@ const changePassword = async (
   payload: { oldPassword: string; newPassword: string },
 ) => {
   // checking if the user is exist
+  // console.log(userData);
   const user = await UserModel.isUserExistsByEmail(userData.email);
 
   if (!user) {
@@ -223,7 +224,7 @@ const forgetPassword: any = async (userId: string) => {
 
   sendEmail(user.email, resetUILink);
 
-  console.log(resetUILink);
+  // console.log(resetUILink);
 };
 
 const resetPassword = async (
@@ -254,8 +255,6 @@ const resetPassword = async (
     token,
     config.jwt_access_secret as string,
   ) as JwtPayload;
-
-  //localhost:3000?id=A-0001&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJBLTAwMDEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDI4NTA2MTcsImV4cCI6MTcwMjg1MTIxN30.-T90nRaz8-KouKki1DkCSMAbsHyb9yDi0djZU3D6QO4
 
   if (payload.email !== decoded.email) {
     throw new AppError(httpStatus.FORBIDDEN, 'You are forbidden!');

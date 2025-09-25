@@ -59,17 +59,7 @@ const skillsValidationSchema = z.object({
 
 const updateSkillsValidationSchema = z.object({
   body: z.object({
-    imgUrl: z
-      .union([z.string().url(), multerFileSchema])
-      .optional()
-      .refine(
-        (val) =>
-          (typeof val === 'string' && val.length > 0) ||
-          (typeof val === 'object' && val !== null),
-        {
-          message: 'Logo is required',
-        },
-      ),
+    imgUrl: z.union([z.string().url(), multerFileSchema]).optional(),
     skillName: z
       .string()
       .min(1, 'Skill name is required')

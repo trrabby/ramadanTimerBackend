@@ -23,7 +23,7 @@ const projectValidationSchema = z.object({
       .min(1, 'Description of project is required'),
     thumbnails: z
       .array(multerFileSchema)
-      .min(1, 'At least one thumbnail is requireddddd')
+      .min(1, 'At least one thumbnail is required')
       .max(5, 'Maximum 5 thumbnails are allowed'),
     featured: z.boolean().optional(),
   }),

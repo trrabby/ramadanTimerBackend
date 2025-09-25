@@ -20,6 +20,7 @@ const AddSkill = catchAsync(async (req, res) => {
 });
 
 const getAllSkills = catchAsync(async (req, res) => {
+  console.log(req.user);
   const result = await SkillsServices.getAllSkills(req.query);
 
   sendResponse(res, {
@@ -33,8 +34,8 @@ const getAllSkills = catchAsync(async (req, res) => {
 const updateASkill = catchAsync(async (req, res) => {
   const { id } = req.params;
   const data = JSON.parse(req.body.data);
-  const logo = req.file?.path;
-  const payLoad = { ...data, logo };
+  const imgUrl = req.file?.path;
+  const payLoad = { ...data, imgUrl };
   // console.log(payLoad);
   const result = await SkillsServices.updateSkill(id, payLoad);
 
