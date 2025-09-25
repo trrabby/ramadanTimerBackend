@@ -7,6 +7,20 @@ const SkillsSchema = new Schema<ISkill>(
 
     skillName: { type: String, unique: true, required: true },
 
+    genre: {
+      type: String,
+      enum: [
+        'programming_language',
+        'frontend',
+        'backend',
+        'database',
+        'devops',
+        'tools',
+        'other',
+      ],
+      required: true,
+    },
+
     description: { type: String },
 
     isDeleted: {

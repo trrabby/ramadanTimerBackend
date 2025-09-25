@@ -36,6 +36,23 @@ const skillsValidationSchema = z.object({
           message: 'Skill name must be unique',
         },
       ),
+    genre: z.enum(
+      [
+        'programming_language',
+        'frontend',
+        'backend',
+        'database',
+        'devops',
+        'tools',
+        'other',
+      ],
+      {
+        required_error:
+          'Genre is required, Values should be one of frontend, backend, database, devops, tools, other',
+        invalid_type_error:
+          'Genre is required, Values should be one of frontend, backend, database, devops, tools, other',
+      },
+    ),
     description: z.string().optional(),
   }),
 });
@@ -63,6 +80,23 @@ const updateSkillsValidationSchema = z.object({
         },
         {
           message: `This skill already exists. Please add unique skill.`,
+        },
+      )
+      .optional(),
+    genre: z
+      .enum(
+        [
+          'programming_language',
+          'frontend',
+          'backend',
+          'database',
+          'devops',
+          'tools',
+          'other',
+        ],
+        {
+          invalid_type_error:
+            'Genre is required, Values should be one of frontend, backend, database, devops, tools, other',
         },
       )
       .optional(),
