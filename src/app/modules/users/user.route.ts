@@ -18,6 +18,12 @@ router.post(
 
 router.get('/', auth(USER_ROLE.admin), UserControllers.AllUsers);
 
+router.get(
+  '/me',
+  auth(USER_ROLE.admin, USER_ROLE.editor, USER_ROLE.reader),
+  UserControllers.getMyProfile,
+);
+
 router.patch(
   '/:email',
   multerUpload.single('file'),

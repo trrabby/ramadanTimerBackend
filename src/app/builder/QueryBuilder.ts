@@ -20,6 +20,7 @@ class QueryBuilder<T> {
               [field]: { $regex: searchTerm, $options: 'i' },
             }) as FilterQuery<T>,
         ),
+        isDeleted: false,
       });
     }
 

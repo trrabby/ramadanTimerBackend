@@ -21,8 +21,6 @@ const registerUser = catchAsync(async (req, res) => {
   });
 });
 
-export { registerUser };
-
 const AllUsers = catchAsync(async (req, res) => {
   const result = await UserServices.findAllUsers(req.query);
   sendResponse(res, {
@@ -58,9 +56,22 @@ const deleteAUserFun = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
+const getMyProfile = catchAsync(async (req, res) => {
+  const { email } = req.user as { email: string };
+  const result = await UserServices.getMyProfile(email);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User profile fetched successfully!',
+    data: result,
+  });
+});
+
 export const UserControllers = {
   registerUser,
   AllUsers,
   updateAUserFun,
   deleteAUserFun,
+  getMyProfile,
 };

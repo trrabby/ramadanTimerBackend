@@ -98,9 +98,20 @@ const deleteAUser = async (id: string) => {
   return result;
 };
 
+// get my profile
+const getMyProfile = async (email: string) => {
+  const user = await UserModel.findOne({ email });
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  return user;
+};
+
 export const UserServices = {
   registerNewUserIntoDB,
   findAllUsers,
   updateAUser,
   deleteAUser,
+  getMyProfile,
 };
