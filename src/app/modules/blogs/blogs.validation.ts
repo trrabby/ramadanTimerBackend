@@ -15,8 +15,6 @@ const BlogsValidationSchema = z.object({
   body: z.object({
     title: z.string().min(1, 'Blog title is required'),
     category: z.string().min(1, 'Category is required'),
-    author: z.string().min(1, 'Author name is required'),
-    authorImg: z.string().url('Author image must be a valid URL').optional(),
     tags: z
       .array(z.string().min(1, 'Tag cannot be empty'))
       .min(1, 'At least one tag is required'),
@@ -34,8 +32,6 @@ const updateBlogsValidationSchema = z.object({
   body: z.object({
     title: z.string().min(1, 'Blog title is required').optional(),
     category: z.string().min(1, 'Category is required').optional(),
-    author: z.string().min(1, 'Author name is required').optional(),
-    authorImg: z.string().url('Author image must be a valid URL').optional(),
     tags: z
       .array(z.string().min(1, 'Tag cannot be empty'))
       .min(1, 'At least one tag is required')

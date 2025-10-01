@@ -68,7 +68,10 @@ const deleteOneById = async (id: string) => {
 };
 
 const getOneById = async (id: string) => {
-  const result = await BlogModel.find({ _id: id });
+  const result = await BlogModel.find({ _id: id }).populate({
+    path: 'author',
+    select: 'name email imgUrl role', // Fields to select from the populated document
+  });
   return result;
 };
 

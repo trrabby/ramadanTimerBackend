@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
@@ -5,6 +6,7 @@ import customizedMsg from '../../utils/customisedMsg';
 import { BlogsServices } from './blogs.services';
 import AppError from '../../errorHandlers/AppError';
 import { USER_ROLE } from '../users/user.constant';
+import { UserServices } from '../users/user.services';
 
 const create = catchAsync(async (req, res) => {
   const data = JSON.parse(req.body.data);
@@ -14,8 +16,10 @@ const create = catchAsync(async (req, res) => {
     : [];
 
   const coverImage = thumbnails.length > 0 ? thumbnails[0] : '';
+  const user = await UserServices.getMyProfile(req.user.email);
+  const author = user._id;
 
-  const payLoad = { ...data, coverImage, thumbnails };
+  const payLoad = { ...data, author, coverImage, thumbnails };
   // console.log(payLoad);
 
   const result = await BlogsServices.create(payLoad);
@@ -43,8 +47,16 @@ const getAll = catchAsync(async (req, res) => {
 const updateOneById = catchAsync(async (req, res) => {
   const { id } = req.params;
   const data = JSON.parse(req.body.data);
-  const blogToBeUpdated = await BlogsServices.getOneById(id);
-  const sameAuthor = blogToBeUpdated[0]?.authorEmail === req?.user?.email;
+  const blogToBeUpdated = await BlogsServices?.getOneById(id);
+  const author = blogToBeUpdated[0].author as {
+    name: string;
+    email: string;
+    imgUrl: string;
+    role: string;
+  };
+
+  const sameAuthor = author?.email === req?.user?.email;
+  // console.log(sameAuthor);
   if (req?.user?.role !== USER_ROLE.admin && !sameAuthor) {
     throw new AppError(
       httpStatus.UNAUTHORIZED,
@@ -76,13 +88,20 @@ const updateOneById = catchAsync(async (req, res) => {
 const updateCoverPhotoById = catchAsync(async (req, res) => {
   const { id } = req.params;
   const data = JSON.parse(req.body.data);
-  const blogToBeUpdated = await BlogsServices.getOneById(id);
-  const sameAuthor = blogToBeUpdated[0]?.authorEmail === req?.user?.email;
+  const blogToBeUpdated = await BlogsServices?.getOneById(id);
+  const author = blogToBeUpdated[0].author as {
+    name: string;
+    email: string;
+    imgUrl: string;
+    role: string;
+  };
+
+  const sameAuthor = author?.email === req?.user?.email;
 
   if (req?.user?.role !== USER_ROLE.admin && !sameAuthor) {
     throw new AppError(
       httpStatus.UNAUTHORIZED,
-      'You are not authorized to update this blog',
+      'You are not authorized to update this cover photo',
     );
   }
   const result = await BlogsServices.updateOneById(id, data);
@@ -97,8 +116,16 @@ const updateCoverPhotoById = catchAsync(async (req, res) => {
 
 const deleteOneById = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const blogToBeDeleted = await BlogsServices.getOneById(id);
-  const sameAuthor = blogToBeDeleted[0]?.authorEmail === req?.user?.email;
+  const blogToBeDeleted = await BlogsServices?.getOneById(id);
+  const author = blogToBeDeleted[0].author as {
+    name: string;
+    email: string;
+    imgUrl: string;
+    role: string;
+  };
+
+  const sameAuthor = author?.email === req?.user?.email;
+
   if (req?.user?.role !== USER_ROLE.admin && !sameAuthor) {
     throw new AppError(
       httpStatus.UNAUTHORIZED,

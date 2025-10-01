@@ -13,15 +13,9 @@ const BlogSchema = new Schema<IBlog>(
       required: true,
     },
     author: {
-      type: String,
+      type: Schema.Types.ObjectId,
       required: true,
-    },
-    authorImg: {
-      type: String,
-    },
-    authorEmail: {
-      type: String,
-      required: true,
+      ref: 'User',
     },
     tags: {
       type: [String],
@@ -33,6 +27,9 @@ const BlogSchema = new Schema<IBlog>(
     },
     coverImage: {
       type: String,
+    },
+    previousUploadedImg: {
+      type: [String],
     },
     thumbnails: {
       type: [String],
