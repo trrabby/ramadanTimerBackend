@@ -16,6 +16,8 @@ router.post(
   UserControllers.registerUser,
 );
 
+router.post('/registerViaProviders', UserControllers.registerUserViaProvider);
+
 router.get('/', auth(USER_ROLE.admin), UserControllers.AllUsers);
 
 router.get('/meByEmail/:email', UserControllers.getMyProfileByEmail);

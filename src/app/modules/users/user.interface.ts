@@ -10,12 +10,13 @@ export interface IUser {
   postOffice?: string;
   subDistrict?: string;
   number?: string;
-  needsPasswordChange: boolean;
+  needsPasswordChange?: boolean;
   passwordChangedAt?: Date;
   imgUrl?: string;
   role: 'admin' | 'reader' | 'editor';
-  isDeleted: boolean;
-  status: 'active' | 'blocked';
+  authProvider?: string;
+  isDeleted?: boolean;
+  status?: 'active' | 'blocked';
 }
 
 export interface UserModelStatic extends Model<IUser> {

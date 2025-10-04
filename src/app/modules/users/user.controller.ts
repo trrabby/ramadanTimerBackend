@@ -3,6 +3,8 @@ import { UserServices } from './user.services';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 import customizedMsg from '../../utils/customisedMsg';
+import { verifyGoogleToken } from '../../utils/ProvidersTokenVerify';
+import { IUser } from './user.interface';
 
 const registerUser = catchAsync(async (req, res) => {
   const data = JSON.parse(req.body.data);
@@ -12,6 +14,31 @@ const registerUser = catchAsync(async (req, res) => {
     ...data,
     imgUrl,
   });
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: `${user.user.role} is created successfully`,
+    data: user,
+  });
+});
+
+const registerUserViaProvider = catchAsync(async (req, res) => {
+  const authProvider = req.body.authProvider;
+  const providerToken = req.headers.authorization;
+  const DataFromProviders = await verifyGoogleToken(providerToken);
+  console.log(DataFromProviders);
+  const { email, name, picture } = DataFromProviders;
+
+  const userData: IUser = {
+    email: email,
+    name: name,
+    imgUrl: picture,
+    password: `default_${email}`,
+    role: 'reader',
+    authProvider,
+  };
+  const user = await UserServices.registerNewUserIntoDB(userData);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -81,6 +108,7 @@ const getMyProfileByEmail = catchAsync(async (req, res) => {
 
 export const UserControllers = {
   registerUser,
+  registerUserViaProvider,
   AllUsers,
   updateAUserFun,
   deleteAUserFun,

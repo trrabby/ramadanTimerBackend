@@ -12,6 +12,8 @@ router.post(
   AuthControllers.loginUser,
 );
 
+router.post('/login-through-providers', AuthControllers.loginUserViaProvider);
+
 router.post(
   '/change-password',
   auth(USER_ROLE.admin, USER_ROLE.editor, USER_ROLE.reader),

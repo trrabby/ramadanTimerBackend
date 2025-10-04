@@ -68,6 +68,57 @@ const loginUser = async (payload: TLoginUser) => {
   };
 };
 
+const loginViaProvider = async (email: string) => {
+  // checking if the user is exist
+  const user = await UserModel.isUserExistsByEmail(email);
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
+  }
+  // checking if the user is already deleted
+
+  const isDeleted = user?.isDeleted;
+
+  if (isDeleted) {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted !');
+  }
+
+  // checking if the user is blocked
+
+  const userStatus = user?.status;
+
+  if (userStatus === 'blocked') {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked ! !');
+  }
+
+  //create token and sent to the  client
+
+  const jwtPayload = {
+    email: user.email,
+    role: user.role,
+    name: user.name,
+    imgUrl: user.imgUrl,
+  };
+
+  const accessToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.jwt_access_expires_in as string,
+  );
+
+  const refreshToken = createToken(
+    jwtPayload,
+    config.jwt_refresh_secret as string,
+    config.jwt_refresh_expires_in as string,
+  );
+  console.log({ 'access and refresh': accessToken, refreshToken });
+
+  return {
+    accessToken: `Bearer ${accessToken}`,
+    refreshToken: `Bearer ${refreshToken}`,
+  };
+};
+
 const changePassword = async (
   userData: JwtPayload,
   payload: { oldPassword: string; newPassword: string },
@@ -281,6 +332,7 @@ const resetPassword = async (
 
 export const AuthServices = {
   loginUser,
+  loginViaProvider,
   changePassword,
   refreshToken,
   forgetPassword,

@@ -3,6 +3,8 @@ import config from '../../config';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { AuthServices } from './auth.service';
+import { verifyGoogleToken } from '../../utils/ProvidersTokenVerify';
+import AppError from '../../errorHandlers/AppError';
 
 const loginUser = catchAsync(async (req, res) => {
   const result = await AuthServices.loginUser(req.body);
@@ -22,6 +24,34 @@ const loginUser = catchAsync(async (req, res) => {
       accessToken,
       refreshToken,
       needsPasswordChange,
+    },
+  });
+});
+
+const loginUserViaProvider = catchAsync(async (req, res) => {
+  const providerToken = req.headers.authorization;
+  const DataFromProviders = await verifyGoogleToken(providerToken);
+  console.log(DataFromProviders);
+  const { email, verified_email } = DataFromProviders;
+  if (!verified_email) {
+    new AppError(httpStatus.UNAUTHORIZED, 'User not verified!!');
+  }
+  const result = await AuthServices.loginViaProvider(email);
+  // console.log(result);
+  const { refreshToken, accessToken } = result;
+
+  res.cookie('refreshToken', refreshToken, {
+    secure: config.NODE_ENV === 'production',
+    httpOnly: true,
+  });
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User is logged in succesfully!',
+    data: {
+      accessToken,
+      refreshToken,
     },
   });
 });
@@ -83,6 +113,7 @@ const resetPassword = catchAsync(async (req, res) => {
 
 export const AuthControllers = {
   loginUser,
+  loginUserViaProvider,
   changePassword,
   refreshToken,
   forgetPassword,
