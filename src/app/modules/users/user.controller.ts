@@ -68,10 +68,22 @@ const getMyProfile = catchAsync(async (req, res) => {
   });
 });
 
+const getMyProfileByEmail = catchAsync(async (req, res) => {
+  const { email } = req.params;
+  const result = await UserServices.getMyProfile(email);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User profile fetched successfully!',
+    data: result,
+  });
+});
+
 export const UserControllers = {
   registerUser,
   AllUsers,
   updateAUserFun,
   deleteAUserFun,
   getMyProfile,
+  getMyProfileByEmail,
 };
