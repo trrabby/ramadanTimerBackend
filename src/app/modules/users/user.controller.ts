@@ -27,7 +27,7 @@ const registerUserViaProvider = catchAsync(async (req, res) => {
   const authProvider = req.body.authProvider;
   const providerToken = req.headers.authorization;
   const DataFromProviders = await verifyGoogleToken(providerToken);
-  console.log(DataFromProviders);
+  // console.log(DataFromProviders);
   const { email, name, picture } = DataFromProviders;
 
   const userData: IUser = {

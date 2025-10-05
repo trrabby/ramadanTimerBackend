@@ -58,6 +58,10 @@ const userSchema = new Schema<IUser, UserModelStatic>(
       enum: ['active', 'blocked'],
       default: 'active',
     },
+    
+    authProvider:{
+      type: String
+    },
 
     isDeleted: {
       type: Boolean,
