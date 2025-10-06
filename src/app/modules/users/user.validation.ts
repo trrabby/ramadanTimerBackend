@@ -6,7 +6,7 @@ const userValidationSchema = z.object({
     email: z.string().email('Invalid email format.'),
     imgUrl: z.string().optional(),
     password: z.string().min(6, 'Password must be at least 6 characters long.'),
-    role: z.enum(['admin', 'mealProvider', 'customer']).optional(),
+    role: z.enum(['admin', 'reader', 'editor']).optional(),
     status: z.enum(['active', 'blocked']).optional().default('active'),
     isDeleted: z.boolean().optional().default(false),
   }),
@@ -21,7 +21,7 @@ const userUpdateValidationSchema = z.object({
       .string()
       .min(6, 'Password must be at least 6 characters long.')
       .optional(),
-    role: z.enum(['admin', 'mealProvider', 'customer']).optional(),
+    role: z.enum(['admin', 'reader', 'editor']).optional(),
     status: z.enum(['active', 'blocked']).optional(),
     isDeleted: z.boolean().optional(),
   }),
