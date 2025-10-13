@@ -111,7 +111,7 @@ const loginViaProvider = async (email: string) => {
     config.jwt_refresh_secret as string,
     config.jwt_refresh_expires_in as string,
   );
-  console.log({ 'access and refresh': accessToken, refreshToken });
+  // console.log({ 'access and refresh': accessToken, refreshToken });
 
   return {
     accessToken: `Bearer ${accessToken}`,

@@ -16,7 +16,8 @@ router.post(
   UserControllers.registerUser,
 );
 
-router.post('/registerViaProviders', UserControllers.registerUserViaProvider);
+router.post('/registerViaGoogle', UserControllers.registerUserViaGoogle);
+router.post('/registerViaGithub', UserControllers.registerUserViaGithub);
 
 router.get('/', auth(USER_ROLE.admin), UserControllers.AllUsers);
 

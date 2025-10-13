@@ -12,7 +12,8 @@ router.post(
   AuthControllers.loginUser,
 );
 
-router.post('/login-through-providers', AuthControllers.loginUserViaProvider);
+router.post('/login-through-google', AuthControllers.loginUserViaGoogle);
+router.post('/login-through-github', AuthControllers.loginUserViaGithub);
 
 router.post(
   '/change-password',

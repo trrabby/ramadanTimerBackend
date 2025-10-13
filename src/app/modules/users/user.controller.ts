@@ -3,8 +3,29 @@ import { UserServices } from './user.services';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 import customizedMsg from '../../utils/customisedMsg';
-import { verifyGoogleToken } from '../../utils/ProvidersTokenVerify';
+import {
+  verifyGithubToken,
+  verifyGoogleToken,
+} from '../../utils/ProvidersTokenVerify';
 import { IUser } from './user.interface';
+
+export interface IdecodedUser {
+  id: string | number;
+  name: string;
+  email: string;
+  imgUrl: string;
+  username?: string | null; // GitHub 'login'
+  bio?: string | null;
+  location?: string | null;
+  company?: string | null;
+  blog?: string | null;
+  htmlUrl?: string | null; // GitHub profile link
+  verifiedEmail?: boolean | null; // true if verified
+  provider?: 'google' | 'github'; // identify which platform
+  accessToken?: string | null; // store if you need reuse
+  createdAt?: string | null; // GitHub account creation date
+  updatedAt?: string | null;
+}
 
 const registerUser = catchAsync(async (req, res) => {
   const data = JSON.parse(req.body.data);
@@ -23,17 +44,44 @@ const registerUser = catchAsync(async (req, res) => {
   });
 });
 
-const registerUserViaProvider = catchAsync(async (req, res) => {
+const registerUserViaGoogle = catchAsync(async (req, res) => {
   const authProvider = req.body.authProvider;
   const providerToken = req.headers.authorization;
-  const DataFromProviders = await verifyGoogleToken(providerToken);
+  const DataFromProviders = await verifyGoogleToken(providerToken as string);
   // console.log(DataFromProviders);
-  const { email, name, picture } = DataFromProviders;
+  // return;
+  const { email, name, imgUrl } = DataFromProviders as IdecodedUser;
 
   const userData: IUser = {
-    email: email,
-    name: name,
-    imgUrl: picture,
+    email,
+    name,
+    imgUrl,
+    password: `default_${email}`,
+    role: 'reader',
+    authProvider,
+  };
+  const user = await UserServices.registerNewUserIntoDB(userData);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: `${user.user.role} is created successfully`,
+    data: user,
+  });
+});
+
+const registerUserViaGithub = catchAsync(async (req, res) => {
+  const authProvider = req.body.authProvider;
+  const providerToken = req.headers.authorization;
+  const DataFromProviders = await verifyGithubToken(providerToken as string);
+  // console.log({ 'Github token decoded data': DataFromProviders });
+  // return;
+  const { email, name, imgUrl } = DataFromProviders as IdecodedUser;
+
+  const userData: IUser = {
+    email,
+    name,
+    imgUrl,
     password: `default_${email}`,
     role: 'reader',
     authProvider,
@@ -108,7 +156,8 @@ const getMyProfileByEmail = catchAsync(async (req, res) => {
 
 export const UserControllers = {
   registerUser,
-  registerUserViaProvider,
+  registerUserViaGoogle,
+  registerUserViaGithub,
   AllUsers,
   updateAUserFun,
   deleteAUserFun,
