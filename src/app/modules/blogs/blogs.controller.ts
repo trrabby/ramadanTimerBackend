@@ -20,7 +20,7 @@ const create = catchAsync(async (req, res) => {
   const author = user._id;
 
   const payLoad = { ...data, author, coverImage, thumbnails };
-  // console.log(payLoad);
+  console.log(payLoad);
 
   const result = await BlogsServices.create(payLoad);
 
