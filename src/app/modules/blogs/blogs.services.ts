@@ -4,7 +4,7 @@ import QueryBuilder from '../../builder/QueryBuilder';
 import { IBlog } from './blogs.interface';
 import { BlogModel } from './blogs.model';
 
-const SearchableFields = ['title', 'category', 'author', 'tags', 'content'];
+const SearchableFields = ['title', 'category', 'tags'];
 
 const create = async (payload: IBlog) => {
   const result = await BlogModel.create(payload);
@@ -19,12 +19,18 @@ const getAll = async (query: Record<string, unknown>) => {
     .paginate()
     .fields();
 
-  const result = await blogsQuery.modelQuery.sort({ _id: -1 }).find({
-    $or: [
-      { isDeleted: { $exists: false } }, // Documents where `isDeleted` does not exist
-      { isDeleted: false }, // Documents where `isDeleted` is explicitly false
-    ],
-  });
+  const result = await blogsQuery.modelQuery
+    .sort({ _id: -1 })
+    .find({
+      $or: [
+        { isDeleted: { $exists: false } }, // Documents where `isDeleted` does not exist
+        { isDeleted: false }, // Documents where `isDeleted` is explicitly false
+      ],
+    })
+    .populate({
+      path: 'author',
+      select: 'name email imgUrl role', // Fields to select from the populated document
+    });
   const meta = await blogsQuery.countTotal();
 
   return { meta, result };
