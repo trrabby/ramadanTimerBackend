@@ -27,9 +27,16 @@ const ProjectSchema = new Schema<IProject>(
       type: String,
       required: true,
     },
+    stackUsed: {
+      type: [String],
+      required: true,
+    },
     thumbnails: {
       type: [String],
       required: true,
+    },
+    specialRemarks: {
+      type: String,
     },
     featured: {
       type: Boolean,

@@ -11,7 +11,7 @@ class QueryBuilder<T> {
 
   search(searchableFields: string[]) {
     const searchTerm = this?.query?.searchTerm;
-    // console.log(searchTerm);
+    console.log(searchTerm, searchableFields);
     if (searchTerm) {
       this.modelQuery = this.modelQuery.find({
         $or: searchableFields.map(
@@ -20,7 +20,6 @@ class QueryBuilder<T> {
               [field]: { $regex: searchTerm, $options: 'i' },
             }) as FilterQuery<T>,
         ),
-        isDeleted: false,
       });
     }
 
@@ -31,7 +30,15 @@ class QueryBuilder<T> {
     const queryObj = { ...this.query }; // copy
 
     // Filtering
-    const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
+    const excludeFields = [
+      'searchTerm',
+      'sort',
+      'limit',
+      'page',
+      'fields',
+      'minPrice',
+      'maxPrice',
+    ];
 
     excludeFields.forEach((el) => delete queryObj[el]);
 

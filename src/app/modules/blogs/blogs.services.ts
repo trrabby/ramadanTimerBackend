@@ -12,26 +12,20 @@ const create = async (payload: IBlog) => {
 };
 
 const getAll = async (query: Record<string, unknown>) => {
-  const blogsQuery = new QueryBuilder(BlogModel.find(), query)
+  const baseQuery = new QueryBuilder(BlogModel.find(), query)
     .search(SearchableFields)
     .filter()
     .sort()
     .paginate()
     .fields();
 
-  const result = await blogsQuery.modelQuery
-    .sort({ _id: -1 })
-    .find({
-      $or: [
-        { isDeleted: { $exists: false } }, // Documents where `isDeleted` does not exist
-        { isDeleted: false }, // Documents where `isDeleted` is explicitly false
-      ],
-    })
-    .populate({
-      path: 'author',
-      select: 'name email imgUrl role', // Fields to select from the populated document
-    });
-  const meta = await blogsQuery.countTotal();
+  const result = await baseQuery.modelQuery.sort({ _id: -1 }).find({
+    $or: [
+      { isDeleted: { $exists: false } }, // Documents where `isDeleted` does not exist
+      { isDeleted: false }, // Documents where `isDeleted` is explicitly false
+    ],
+  });
+  const meta = await baseQuery.countTotal();
 
   return { meta, result };
 };

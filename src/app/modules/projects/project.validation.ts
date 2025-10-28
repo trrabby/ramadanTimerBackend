@@ -21,10 +21,14 @@ const projectValidationSchema = z.object({
     descriptionOfProject: z
       .string()
       .min(1, 'Description of project is required'),
+    stackUsed: z
+      .array(z.string())
+      .min(1, 'At least one technology is required'),
     thumbnails: z
       .array(multerFileSchema)
       .min(1, 'At least one thumbnail is required')
       .max(5, 'Maximum 5 thumbnails are allowed'),
+    specialRemarks: z.string().optional(),
     featured: z.boolean().optional(),
   }),
 });
@@ -43,12 +47,17 @@ const updateProjectValidationSchema = z.object({
       .string()
       .min(1, 'Description of project is required')
       .optional(),
+    stackUsed: z
+      .array(z.string())
+      .min(1, 'At least one technology is required')
+      .optional(),
     thumbnails: z
       .array(z.string().url().or(multerFileSchema))
       .max(5, 'Maximum 5 thumbnails are allowed')
       .refine((arr) => arr === undefined || arr.length > 0, {
         message: 'At least one thumbnail is required',
       }),
+    specialRemarks: z.string().optional(),
     featured: z.boolean().optional(),
   }),
 });

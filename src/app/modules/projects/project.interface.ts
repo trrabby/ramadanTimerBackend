@@ -5,7 +5,9 @@ export interface IProject {
   clientLink: string;
   shortDescription: string;
   descriptionOfProject: string;
+  stackUsed: string[];
   thumbnails: string[];
+  specialRemarks?: string;
   featured?: boolean;
   isDeleted?: boolean;
   createdAt?: Date;
