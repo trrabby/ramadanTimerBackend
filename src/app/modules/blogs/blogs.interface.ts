@@ -11,6 +11,7 @@ export interface IBlog {
   previousUploadedImg?: string[];
   thumbnails: string[];
   featured?: boolean;
+  isPublished?: boolean;
   isDeleted?: boolean;
   createdAt?: Date;
 }

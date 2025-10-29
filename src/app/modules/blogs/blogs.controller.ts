@@ -18,9 +18,10 @@ const create = catchAsync(async (req, res) => {
   const coverImage = thumbnails.length > 0 ? thumbnails[0] : '';
   const user = await UserServices.getMyProfile(req.user.email);
   const author = user._id;
+  const isPublished = user.role === USER_ROLE.admin ? true : false;
 
-  const payLoad = { ...data, author, coverImage, thumbnails };
-  console.log(payLoad);
+  const payLoad = { ...data, author, coverImage, thumbnails, isPublished };
+  // console.log(payLoad);
 
   const result = await BlogsServices.create(payLoad);
 

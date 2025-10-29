@@ -25,6 +25,7 @@ const BlogsValidationSchema = z.object({
       .min(1, 'At least one thumbnail is required')
       .max(5, 'Maximum 5 thumbnails are allowed'),
     featured: z.boolean().optional(),
+    isPublished: z.boolean().optional(),
   }),
 });
 
@@ -45,6 +46,7 @@ const updateBlogsValidationSchema = z.object({
         message: 'At least one thumbnail is required',
       }),
     featured: z.boolean().optional(),
+    isPublished: z.boolean().optional(),
   }),
 });
 
