@@ -28,9 +28,6 @@ const BlogSchema = new Schema<IBlog>(
     coverImage: {
       type: String,
     },
-    previousUploadedImg: {
-      type: [String],
-    },
     thumbnails: {
       type: [String],
     },

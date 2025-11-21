@@ -67,14 +67,15 @@ const updateOneById = catchAsync(async (req, res) => {
 
   const thumbnails: string[] = data.previousUploadedImg || [];
   delete data.previousUploadedImg;
-
+  const coverImage =
+    thumbnails.length > 0 ? thumbnails[0] : blogToBeUpdated[0].coverImage;
   const newUploadedImgUrl = Array.isArray(req.files)
     ? req.files.map((file) => file.path)
     : [];
   if (newUploadedImgUrl.length > 0) {
     thumbnails.push(...newUploadedImgUrl);
   }
-  const payLoad = { ...data, thumbnails };
+  const payLoad = { ...data, coverImage, thumbnails };
   // console.log(payLoad);
   const result = await BlogsServices.updateOneById(id, payLoad);
 
