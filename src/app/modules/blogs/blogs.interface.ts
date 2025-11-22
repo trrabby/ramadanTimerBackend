@@ -12,6 +12,7 @@ export interface IBlog {
   thumbnails: string[];
   featured?: boolean;
   isPublished?: boolean;
+  feedbacks?: Types.ObjectId[];
   isDeleted?: boolean;
   createdAt?: Date;
 }

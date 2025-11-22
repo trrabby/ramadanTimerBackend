@@ -29,7 +29,7 @@ router.patch(
 );
 
 router.put(
-  '/delete-blog/:id',
+  '/delete-feedback/:id',
   auth(USER_ROLE.admin, USER_ROLE.editor, USER_ROLE.reader),
   BlogsFeedbackControllers.deleteOneById,
 );

@@ -39,6 +39,11 @@ const BlogSchema = new Schema<IBlog>(
       type: Boolean,
       default: false,
     },
+    feedbacks: {
+      type: [Schema.Types.ObjectId],
+      default: [],
+      ref: 'Blog_Feedback',
+    },
     isDeleted: {
       type: Boolean,
       default: false,

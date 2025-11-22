@@ -1,14 +1,40 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import QueryBuilder from '../../builder/QueryBuilder';
+import { BlogsServices } from '../blogs/blogs.services';
 import { IBlog_Feedback } from './blogs_feedback.interface';
 import { BlogFeedbackModel } from './blogs_feedback.model';
-
+import mongoose from 'mongoose';
 const SearchableFields = ['feedback'];
 
 const create = async (payload: IBlog_Feedback) => {
-  const result = await BlogFeedbackModel.create(payload);
-  return result;
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    // Create blog feedback within transaction
+    const result = await BlogFeedbackModel.create([payload], { session });
+
+    // Update blog with feedback reference
+    await BlogsServices.updateOneById(
+      payload.blog as any,
+      {
+        $push: { feedbacks: result[0]._id },
+      } as any,
+      { session }, // Pass session to maintain transaction
+    );
+
+    // Commit the transaction
+    await session.commitTransaction();
+    return result[0];
+  } catch (error) {
+    // Rollback any changes made in the transaction
+    await session.abortTransaction();
+    throw error; // Re-throw the error after rollback
+  } finally {
+    // End the session
+    session.endSession();
+  }
 };
 
 const getAll = async (query: Record<string, unknown>) => {

@@ -27,13 +27,25 @@ const getAll = async (query: Record<string, unknown>) => {
     .populate({
       path: 'author',
       select: 'name email imgUrl role', // Fields to select from the populated document
+    })
+    .populate({
+      path: 'feedbacks',
+      select: 'feedback vote feedback_by createdAt', // Fields to select from the populated document
+    })
+    .populate({
+      path: 'feedbacks.feedback_by',
+      select: 'name email imgUrl role', // Fields to select from the populated document
     });
   const meta = await baseQuery.countTotal();
 
   return { meta, result };
 };
 
-const updateOneById = async (id: string, payload: Partial<IBlog>) => {
+const updateOneById = async (
+  id: string,
+  payload: Partial<IBlog>,
+  options: any = {},
+) => {
   const result = await BlogModel.findOneAndUpdate(
     { _id: id }, // Match the document where the id matches
 
@@ -41,6 +53,7 @@ const updateOneById = async (id: string, payload: Partial<IBlog>) => {
     {
       new: true, // Return the updated document
       runValidators: true, // Run schema validators
+      ...options,
     },
   );
   return result;
