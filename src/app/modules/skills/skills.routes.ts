@@ -4,7 +4,7 @@ import { USER_ROLE } from '../users/user.constant';
 import { multerUpload } from '../../config/multer.config';
 import { SkillsValidations } from './skills.validation';
 import { SkillsControllers } from './skills.controller';
-import validateRequestFormdataPhoto from '../../MiddleWares/validateRequestFormdataPhoto';
+import validateRequestFormdataPhoto from '../../MiddleWares/validateRequestFormdata';
 
 const router = express.Router();
 

@@ -5,7 +5,7 @@ import auth from '../../MiddleWares/auth';
 import { USER_ROLE } from './user.constant';
 import { multerUpload } from '../../config/multer.config';
 import { UserValidation } from './user.validation';
-import validateRequestFormdata from '../../MiddleWares/validateRequestFormdataPhoto';
+import validateRequestFormdata from '../../MiddleWares/validateRequestFormdata';
 
 const router = express.Router();
 

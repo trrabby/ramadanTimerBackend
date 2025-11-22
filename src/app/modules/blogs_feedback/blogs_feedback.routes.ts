@@ -1,0 +1,39 @@
+import express from 'express';
+import auth from '../../MiddleWares/auth';
+import { USER_ROLE } from '../users/user.constant';
+import {
+  BlogFeedbackSchema,
+  updateBlogFeedbackSchema,
+} from './blogs_Feedback.validation';
+import { BlogsFeedbackControllers } from './blogs_feedback.controller';
+import validateRequestFormdata from '../../MiddleWares/validateRequestFormdata';
+import { multerUpload } from '../../config/multer.config';
+
+const router = express.Router();
+
+router.post(
+  '/create-feedback',
+  multerUpload.none(),
+  auth(USER_ROLE.admin, USER_ROLE.editor, USER_ROLE.reader),
+  validateRequestFormdata(BlogFeedbackSchema),
+  BlogsFeedbackControllers.create,
+);
+
+router.get('/', BlogsFeedbackControllers.getAll);
+
+router.patch(
+  '/:id',
+  auth(USER_ROLE.admin, USER_ROLE.editor, USER_ROLE.reader),
+  validateRequestFormdata(updateBlogFeedbackSchema),
+  BlogsFeedbackControllers.updateOneById,
+);
+
+router.put(
+  '/delete-blog/:id',
+  auth(USER_ROLE.admin, USER_ROLE.editor, USER_ROLE.reader),
+  BlogsFeedbackControllers.deleteOneById,
+);
+
+router.get('/:id', BlogsFeedbackControllers.getOneById);
+
+export const BlogFeedbackRoutes = router;
