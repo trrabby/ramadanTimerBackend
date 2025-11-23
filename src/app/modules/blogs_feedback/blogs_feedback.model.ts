@@ -3,16 +3,19 @@ import { IBlog_Feedback } from './blogs_feedback.interface';
 
 const BlogFeedbackSchema = new Schema<IBlog_Feedback>(
   {
-    blog: { type: Schema.Types.ObjectId, ref: 'Blog', required: true },
+    blog: { type: Schema.Types.ObjectId, ref: 'Blog' },
 
     feedback_by: {
       type: Schema.Types.ObjectId,
-      required: true,
       ref: 'User',
     },
 
-    feedback: { type: String },
-
+    feedback: [
+      {
+        text: { type: String },
+        createdAt: { type: Date },
+      },
+    ],
     vote: { type: String, enum: ['like', 'dislike', null], default: null },
 
     isDeleted: {

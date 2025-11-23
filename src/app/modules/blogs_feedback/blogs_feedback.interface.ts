@@ -4,7 +4,12 @@ export interface IBlog_Feedback {
   feedback_by:
     | Types.ObjectId
     | { name: string; email: string; imgUrl: string; role: string };
-  feedback?: string;
+  feedback?: [
+    {
+      text?: string;
+      createdAt?: Date;
+    },
+  ];
   vote?: 'like' | 'dislike' | null;
   isDeleted?: boolean;
   createdAt?: Date;

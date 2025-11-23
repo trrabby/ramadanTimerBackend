@@ -11,27 +11,85 @@ const create = async (payload: IBlog_Feedback) => {
   session.startTransaction();
 
   try {
-    // Create blog feedback within transaction
-    const result = await BlogFeedbackModel.create([payload], { session });
-
-    // Update blog with feedback reference
-    await BlogsServices.updateOneById(
-      payload.blog as any,
+    const isFeedbackExistOnSameBlogByUser = await BlogFeedbackModel.findOne(
       {
-        $push: { feedbacks: result[0]._id },
-      } as any,
-      { session }, // Pass session to maintain transaction
+        blog: payload.blog,
+        feedback_by: payload.feedback_by,
+        isDeleted: { $ne: true },
+      },
+      null,
+      { session },
     );
 
-    // Commit the transaction
+    let result;
+
+    if (isFeedbackExistOnSameBlogByUser && payload.feedback?.[0]?.text) {
+      // Add to existing feedback array
+      const newFeedback = {
+        text: payload.feedback?.[0]?.text,
+        createdAt: new Date(),
+      };
+
+      result = await BlogFeedbackModel.findByIdAndUpdate(
+        isFeedbackExistOnSameBlogByUser._id,
+        {
+          $push: { feedback: newFeedback },
+        },
+        {
+          new: true,
+          session,
+        },
+      );
+    } else if (isFeedbackExistOnSameBlogByUser && payload.vote) {
+      // Add to existing feedback array
+      result = await BlogFeedbackModel.findByIdAndUpdate(
+        isFeedbackExistOnSameBlogByUser._id,
+        {
+          $set: {
+            ...(payload.vote && { vote: payload.vote }),
+            updatedAt: new Date(),
+          },
+        },
+        {
+          new: true,
+          session,
+        },
+      );
+    } else {
+      // Create new document
+      result = await BlogFeedbackModel.create(
+        [
+          {
+            blog: payload.blog,
+            feedback_by: payload.feedback_by,
+            feedback: payload.feedback?.map((fb) => ({
+              text: fb.text,
+              createdAt: new Date(),
+            })),
+            vote: payload.vote,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        ],
+        { session },
+      );
+
+      // Link to blog only for new documents
+      await BlogsServices.updateOneById(
+        payload.blog as any,
+        {
+          $push: { feedbacks: result[0]._id },
+        } as any,
+        { session },
+      );
+    }
+
     await session.commitTransaction();
-    return result[0];
+    return Array.isArray(result) ? result[0] : result;
   } catch (error) {
-    // Rollback any changes made in the transaction
     await session.abortTransaction();
-    throw error; // Re-throw the error after rollback
+    throw error;
   } finally {
-    // End the session
     session.endSession();
   }
 };
