@@ -63,6 +63,7 @@ const getAll = catchAsync(async (req, res) => {
 
 const updateOneById = catchAsync(async (req, res) => {
   const { id } = req.params; // this is the feedbackId
+  // console.log(req.body.data);
   const { text } = JSON.parse(req.body.data); // only text is allowed
 
   if (!text || text.trim() === '') {
@@ -72,11 +73,11 @@ const updateOneById = catchAsync(async (req, res) => {
   // Find the feedback item first
   const feedbackDoc = await BlogsFeedbackServices.getOneByFeedbackId(id);
 
-  if (!feedbackDoc || !feedbackDoc.length) {
+  if (!feedbackDoc) {
     throw new AppError(httpStatus.NOT_FOUND, 'Feedback not found');
   }
 
-  const author = feedbackDoc[0].feedback_by as {
+  const author = feedbackDoc.feedback_by as {
     name: string;
     email: string;
     imgUrl: string;
@@ -103,34 +104,6 @@ const updateOneById = catchAsync(async (req, res) => {
     data: result,
   });
 });
-
-// const deleteOneById = catchAsync(async (req, res) => {
-//   const { id } = req.params;
-//   const feedbackToBeUpdated = await BlogsFeedbackServices?.getOneById(id);
-//   const author = feedbackToBeUpdated[0].feedback_by as {
-//     name: string;
-//     email: string;
-//     imgUrl: string;
-//     role: string;
-//   };
-
-//   const sameAuthor = author?.email === req?.user?.email;
-
-//   if (req?.user?.role !== USER_ROLE.admin && !sameAuthor) {
-//     throw new AppError(
-//       httpStatus.UNAUTHORIZED,
-//       'You are not authorized to delete this feedback',
-//     );
-//   }
-//   const result = await BlogsFeedbackServices.deleteOneById(id);
-
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: 'Feedback Deleted Successfully',
-//     data: result,
-//   });
-// });
 
 const deleteOneById = catchAsync(async (req, res) => {
   const { id } = req.params; // feedbackId

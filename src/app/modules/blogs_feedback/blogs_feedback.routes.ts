@@ -23,6 +23,7 @@ router.get('/', BlogsFeedbackControllers.getAll);
 
 router.patch(
   '/:id',
+  multerUpload.none(),
   auth(USER_ROLE.admin, USER_ROLE.editor, USER_ROLE.reader),
   validateRequestFormdata(updateBlogFeedbackSchema),
   BlogsFeedbackControllers.updateOneById,
