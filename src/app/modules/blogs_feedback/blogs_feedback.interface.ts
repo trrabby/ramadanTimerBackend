@@ -8,10 +8,11 @@ export interface IBlog_Feedback {
     {
       text?: string;
       createdAt?: Date;
+      isDeleted?: boolean;
+      updatedAt?: Date;
     },
   ];
   vote?: 'like' | 'dislike' | null;
-  isDeleted?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }

@@ -14,14 +14,11 @@ const BlogFeedbackSchema = new Schema<IBlog_Feedback>(
       {
         text: { type: String },
         createdAt: { type: Date },
+        isDeleted: { type: Boolean, default: false },
+        updatedAt: { type: Date },
       },
     ],
     vote: { type: String, enum: ['like', 'dislike', null], default: null },
-
-    isDeleted: {
-      type: Boolean,
-      default: false,
-    },
   },
   {
     timestamps: true,

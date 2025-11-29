@@ -36,4 +36,10 @@ router.put(
 
 router.get('/:id', BlogsFeedbackControllers.getOneById);
 
+router.get(
+  '/blog-wise-feedback/:id',
+  BlogsFeedbackControllers.getFeedbackForBlog,
+);
+router.get('/single-feedback/:id', BlogsFeedbackControllers.getOneByFeedbackId);
+
 export const BlogFeedbackRoutes = router;

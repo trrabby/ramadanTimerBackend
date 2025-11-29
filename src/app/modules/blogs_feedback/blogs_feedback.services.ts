@@ -120,28 +120,109 @@ const getAll = async (query: Record<string, unknown>) => {
   return { meta, result };
 };
 
-const updateOneById = async (id: string, payload: Partial<IBlog_Feedback>) => {
-  const result = await BlogFeedbackModel.findOneAndUpdate(
-    { _id: id }, // Match the document where the id matches
-
-    payload, // Apply the update
+const getFeedbackForBlog = async (blogId: string) => {
+  const result = await BlogFeedbackModel.aggregate([
     {
-      new: true, // Return the updated document
-      runValidators: true, // Run schema validators
+      $match: {
+        blog: new mongoose.Types.ObjectId(blogId),
+      },
+    },
+
+    { $unwind: '$feedback' },
+
+    // REMOVE deleted feedback
+    {
+      $match: {
+        'feedback.isDeleted': { $ne: true },
+      },
+    },
+
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'feedback_by',
+        foreignField: '_id',
+        as: 'feedback_by',
+      },
+    },
+    { $unwind: '$feedback_by' },
+
+    {
+      $lookup: {
+        from: 'blogs',
+        localField: 'blog',
+        foreignField: '_id',
+        as: 'blog',
+      },
+    },
+    { $unwind: '$blog' },
+
+    {
+      $group: {
+        _id: '$blog._id',
+        blog: { $first: '$blog' },
+        feedbacks: {
+          $push: {
+            _id: '$feedback._id',
+            text: '$feedback.text',
+            createdAt: '$feedback.createdAt',
+            updatedAt: '$feedback.updatedAt',
+            isDeleted: '$feedback.isDeleted',
+            feedback_by: {
+              _id: '$feedback_by._id',
+              name: '$feedback_by.name',
+              email: '$feedback_by.email',
+              imgUrl: '$feedback_by.imgUrl',
+              role: '$feedback_by.role',
+            },
+          },
+        },
+      },
+    },
+
+    { $project: { _id: 0 } },
+  ]);
+
+  return result[0] || { blog: null, feedbacks: [] };
+};
+
+const updateOneById = async (feedbackId: string, text: string) => {
+  const result = await BlogFeedbackModel.findOneAndUpdate(
+    {
+      'feedback._id': feedbackId, // match specific feedback item
+    },
+    {
+      $set: {
+        'feedback.$.text': text, // only update text
+        'feedback.$.updatedAt': new Date(), // auto-update timestamp
+      },
+    },
+    {
+      new: true,
+      runValidators: true,
     },
   );
+
   return result;
 };
 
-const deleteOneById = async (id: string) => {
+const deleteOneById = async (feedbackId: string) => {
   const result = await BlogFeedbackModel.findOneAndUpdate(
-    { _id: id },
-    { $set: { isDeleted: true } }, // Add the field `isDeleted` and set it to true
     {
-      new: true, // Return the updated document
-      runValidators: true, // Run schema validators
+      'feedback._id': feedbackId, // find the specific feedback element
+    },
+    {
+      $set: {
+        'feedback.$.isDeleted': true, // mark only this feedback deleted
+        'feedback.$.updatedAt': new Date(), // optional: update timestamp
+      },
+    },
+    {
+      new: true,
+      runValidators: true,
     },
   );
+
   return result;
 };
 
@@ -158,10 +239,73 @@ const getOneById = async (id: string) => {
   return result;
 };
 
+const getOneByFeedbackId = async (feedbackId: string) => {
+  const result = await BlogFeedbackModel.aggregate([
+    {
+      $match: {
+        'feedback._id': new mongoose.Types.ObjectId(feedbackId),
+      },
+    },
+
+    { $unwind: '$feedback' },
+
+    {
+      $match: {
+        'feedback._id': new mongoose.Types.ObjectId(feedbackId),
+      },
+    },
+
+    // Populate feedback_by
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'feedback_by',
+        foreignField: '_id',
+        as: 'feedback_by',
+      },
+    },
+    { $unwind: '$feedback_by' },
+
+    // Populate blog
+    {
+      $lookup: {
+        from: 'blogs',
+        localField: 'blog',
+        foreignField: '_id',
+        as: 'blog',
+      },
+    },
+    { $unwind: '$blog' },
+
+    {
+      $project: {
+        _id: 0,
+        blog: {
+          _id: '$blog._id',
+          title: '$blog.title',
+          category: '$blog.category',
+        },
+        feedback: '$feedback',
+        feedback_by: {
+          _id: '$feedback_by._id',
+          name: '$feedback_by.name',
+          email: '$feedback_by.email',
+          imgUrl: '$feedback_by.imgUrl',
+          role: '$feedback_by.role',
+        },
+      },
+    },
+  ]);
+
+  return result[0] || null;
+};
+
 export const BlogsFeedbackServices = {
   create,
   getAll,
+  getFeedbackForBlog,
   updateOneById,
   deleteOneById,
+  getOneByFeedbackId,
   getOneById,
 };
