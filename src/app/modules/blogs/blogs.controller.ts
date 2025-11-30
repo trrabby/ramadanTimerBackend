@@ -49,7 +49,8 @@ const updateOneById = catchAsync(async (req, res) => {
   const { id } = req.params;
   const data = JSON.parse(req.body.data);
   const blogToBeUpdated = await BlogsServices?.getOneById(id);
-  const author = blogToBeUpdated[0].author as {
+  // console.log(blogToBeUpdated);
+  const author = blogToBeUpdated?.author as {
     name: string;
     email: string;
     imgUrl: string;
@@ -68,7 +69,7 @@ const updateOneById = catchAsync(async (req, res) => {
   const thumbnails: string[] = data.previousUploadedImg || [];
   delete data.previousUploadedImg;
   const coverImage =
-    thumbnails.length > 0 ? thumbnails[0] : blogToBeUpdated[0].coverImage;
+    thumbnails.length > 0 ? thumbnails[0] : blogToBeUpdated?.coverImage;
   const newUploadedImgUrl = Array.isArray(req.files)
     ? req.files.map((file) => file.path)
     : [];
@@ -91,7 +92,7 @@ const updateCoverPhotoById = catchAsync(async (req, res) => {
   const { id } = req.params;
   const data = JSON.parse(req.body.data);
   const blogToBeUpdated = await BlogsServices?.getOneById(id);
-  const author = blogToBeUpdated[0].author as {
+  const author = blogToBeUpdated?.author as {
     name: string;
     email: string;
     imgUrl: string;
@@ -119,7 +120,7 @@ const updateCoverPhotoById = catchAsync(async (req, res) => {
 const deleteOneById = catchAsync(async (req, res) => {
   const { id } = req.params;
   const blogToBeDeleted = await BlogsServices?.getOneById(id);
-  const author = blogToBeDeleted[0].author as {
+  const author = blogToBeDeleted?.author as {
     name: string;
     email: string;
     imgUrl: string;

@@ -26,16 +26,20 @@ const getAll = async (query: Record<string, unknown>) => {
     })
     .populate({
       path: 'author',
-      select: 'name email imgUrl role', // Fields to select from the populated document
+      select: 'name email imgUrl role',
     })
     .populate({
       path: 'feedbacks',
-      select: 'feedback vote feedback_by createdAt', // Fields to select from the populated document
-    })
-    .populate({
-      path: 'feedbacks.feedback_by',
-      select: 'name email imgUrl role', // Fields to select from the populated document
+      select: 'feedback vote feedback_by createdAt',
+      match: {
+        $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }],
+      }, // Optional: filter out deleted feedbacks
+      populate: {
+        path: 'feedback_by', // This populates the feedback_by field inside each feedback
+        select: 'name email imgUrl role',
+      },
     });
+
   const meta = await baseQuery.countTotal();
 
   return { meta, result };
@@ -84,11 +88,65 @@ const deleteOneById = async (id: string) => {
 };
 
 const getOneById = async (id: string) => {
-  const result = await BlogModel.find({ _id: id }).populate({
-    path: 'author',
-    select: 'name email imgUrl role', // Fields to select from the populated document
-  });
-  return result;
+  const result = await BlogModel.findOne({
+    _id: id,
+    $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }],
+  })
+    .populate({
+      path: 'author',
+      select: 'name email imgUrl role',
+    })
+    .populate({
+      path: 'feedbacks',
+      select: 'feedback vote feedback_by createdAt',
+      match: {
+        $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }],
+      },
+      populate: {
+        path: 'feedback_by',
+        select: 'name email imgUrl role',
+      },
+    })
+    .lean();
+
+  if (!result) {
+    return null;
+  }
+
+  // Filter out deleted feedback items from each feedback document
+  if (result.feedbacks && Array.isArray(result.feedbacks)) {
+    (result as any).feedbacks = result.feedbacks.map((feedbackDoc: any) => ({
+      ...feedbackDoc,
+      feedback:
+        feedbackDoc.feedback?.filter(
+          (fbItem: any) => fbItem.isDeleted !== true,
+        ) || [],
+    }));
+  }
+
+  // Calculate totals from the filtered feedbacks
+  const feedbacks = result.feedbacks || ([] as any[]);
+
+  const totalLikes = feedbacks.filter((fb) => fb.vote === 'like').length;
+  const totalDislikes = feedbacks.filter((fb) => fb.vote === 'dislike').length;
+
+  // Count total individual feedback text items (excluding deleted ones)
+  const totalComments = feedbacks.reduce((total, feedbackDoc) => {
+    if (feedbackDoc.feedback && Array.isArray(feedbackDoc.feedback)) {
+      const validFeedbacks = feedbackDoc.feedback.filter(
+        (fbItem: any) => fbItem.text && fbItem.text.trim() !== '',
+      );
+      return total + validFeedbacks.length;
+    }
+    return total;
+  }, 0);
+
+  return {
+    ...result,
+    totalLikes,
+    totalDislikes,
+    totalComments,
+  };
 };
 
 export const BlogsServices = {
