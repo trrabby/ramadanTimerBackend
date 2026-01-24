@@ -186,6 +186,26 @@ const getFeedbackForBlog = async (blogId: string) => {
   return result[0] || { blog: null, feedbacks: [] };
 };
 
+const updateVoteByFeedbackId = async (feedbackId: string, text: string) => {
+  const result = await BlogFeedbackModel.findOneAndUpdate(
+    {
+      _id: feedbackId, // match specific feedback
+    },
+    {
+      $set: {
+        vote: text, // only update vote
+        updatedAt: new Date(), // auto-update timestamp
+      },
+    },
+    {
+      new: true,
+      runValidators: true,
+    },
+  );
+
+  return result;
+};
+
 const updateOneById = async (feedbackId: string, text: string) => {
   const result = await BlogFeedbackModel.findOneAndUpdate(
     {
@@ -304,6 +324,7 @@ export const BlogsFeedbackServices = {
   create,
   getAll,
   getFeedbackForBlog,
+  updateVoteByFeedbackId,
   updateOneById,
   deleteOneById,
   getOneByFeedbackId,

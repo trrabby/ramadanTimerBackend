@@ -22,7 +22,15 @@ router.post(
 router.get('/', BlogsFeedbackControllers.getAll);
 
 router.patch(
-  '/:id',
+  '/vote/:id',
+  multerUpload.none(),
+  auth(USER_ROLE.admin, USER_ROLE.editor, USER_ROLE.reader),
+  validateRequestFormdata(updateBlogFeedbackSchema),
+  BlogsFeedbackControllers.updateVoteById,
+);
+
+router.patch(
+  '/comment/:id',
   multerUpload.none(),
   auth(USER_ROLE.admin, USER_ROLE.editor, USER_ROLE.reader),
   validateRequestFormdata(updateBlogFeedbackSchema),
@@ -30,7 +38,7 @@ router.patch(
 );
 
 router.put(
-  '/delete-feedback/:id',
+  '/delete-comment/:id',
   auth(USER_ROLE.admin, USER_ROLE.editor, USER_ROLE.reader),
   BlogsFeedbackControllers.deleteOneById,
 );
