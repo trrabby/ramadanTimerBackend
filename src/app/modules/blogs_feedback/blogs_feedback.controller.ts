@@ -33,32 +33,15 @@ const getAll = catchAsync(async (req, res) => {
 });
 
 const updateVoteById = catchAsync(async (req, res) => {
-  const { id } = req.params; // this is the feedbackId
+  const { id } = req.params;
   // console.log(req.body.data);
   const { text } = JSON.parse(req.body.data); // only text is allowed
-
+  console.log(text);
   // Find the feedback item first
   const feedbackDoc = (await BlogsFeedbackServices.getOneById(id)) as any;
 
   if (!feedbackDoc) {
     throw new AppError(httpStatus.NOT_FOUND, 'Feedback not found');
-  }
-
-  const author = feedbackDoc.feedback_by as {
-    name: string;
-    email: string;
-    imgUrl: string;
-    role: string;
-  };
-
-  const sameAuthor = author?.email === req?.user?.email;
-
-  // Role validation
-  if (req?.user?.role !== USER_ROLE.admin && !sameAuthor) {
-    throw new AppError(
-      httpStatus.UNAUTHORIZED,
-      'You are not authorized to update this feedback',
-    );
   }
 
   // Update service only updates text + updatedAt

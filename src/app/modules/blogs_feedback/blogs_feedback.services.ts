@@ -187,6 +187,7 @@ const getFeedbackForBlog = async (blogId: string) => {
 };
 
 const updateVoteByFeedbackId = async (feedbackId: string, text: string) => {
+  console.log(feedbackId, text);
   const result = await BlogFeedbackModel.findOneAndUpdate(
     {
       _id: feedbackId, // match specific feedback
