@@ -21,9 +21,6 @@ const getAll = async (query: Record<string, unknown>) => {
 
   const result = await baseQuery.modelQuery
     .sort({ _id: -1 })
-    .find({
-      $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }],
-    })
     .populate({
       path: 'author',
       select: 'name email imgUrl role',
@@ -33,9 +30,9 @@ const getAll = async (query: Record<string, unknown>) => {
       select: 'feedback vote feedback_by createdAt',
       match: {
         $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }],
-      }, // Optional: filter out deleted feedbacks
+      },
       populate: {
-        path: 'feedback_by', // This populates the feedback_by field inside each feedback
+        path: 'feedback_by',
         select: 'name email imgUrl role',
       },
     });
