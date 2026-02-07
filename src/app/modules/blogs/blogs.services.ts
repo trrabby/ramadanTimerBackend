@@ -84,6 +84,18 @@ const deleteOneById = async (id: string) => {
   return result;
 };
 
+const restoreOneById = async (id: string) => {
+  const result = await BlogModel.findOneAndUpdate(
+    { _id: id },
+    { $set: { isDeleted: false } }, // Add the field `isDeleted` and set it to true
+    {
+      new: true, // Return the updated document
+      runValidators: true, // Run schema validators
+    },
+  );
+  return result;
+};
+
 const getOneById = async (id: string) => {
   const result = await BlogModel.findOne({
     _id: id,
@@ -152,5 +164,6 @@ export const BlogsServices = {
   updateOneById,
   updateCoverPhotoById,
   deleteOneById,
+  restoreOneById,
   getOneById,
 };

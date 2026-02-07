@@ -41,6 +41,12 @@ router.put(
   BlogsControllers.deleteOneById,
 );
 
+router.put(
+  '/restore-blog/:id',
+  auth(USER_ROLE.admin, USER_ROLE.editor, USER_ROLE.reader),
+  BlogsControllers.restoreOneById,
+);
+
 router.get('/:id', BlogsControllers.getOneById);
 
 export const BlogRoutes = router;

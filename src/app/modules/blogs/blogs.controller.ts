@@ -145,6 +145,34 @@ const deleteOneById = catchAsync(async (req, res) => {
   });
 });
 
+const restoreOneById = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const blogToBeDeleted = await BlogsServices?.getOneById(id);
+  const author = blogToBeDeleted?.author as {
+    name: string;
+    email: string;
+    imgUrl: string;
+    role: string;
+  };
+
+  const sameAuthor = author?.email === req?.user?.email;
+
+  if (req?.user?.role !== USER_ROLE.admin && !sameAuthor) {
+    throw new AppError(
+      httpStatus.UNAUTHORIZED,
+      'You are not authorized to delete this blog',
+    );
+  }
+  const result = await BlogsServices.restoreOneById(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Blog Deleted Successfully',
+    data: result,
+  });
+});
+
 const getOneById = catchAsync(async (req, res) => {
   const { id } = req.params;
   const result = await BlogsServices.getOneById(id);
@@ -163,5 +191,6 @@ export const BlogsControllers = {
   updateOneById,
   updateCoverPhotoById,
   deleteOneById,
+  restoreOneById,
   getOneById,
 };
