@@ -20,6 +20,12 @@ export const FeedbackSchema = z.object({
       })
       .min(1, 'Feedback cannot be empty')
       .trim(),
+    rating: z
+      .number({
+        required_error: 'Rating is required',
+      })
+      .min(1, 'Rating must be at least 1')
+      .max(5, 'Rating cannot be more than 5'),
   }),
 });
 
@@ -34,6 +40,12 @@ export const updateFeedbackSchema = z.object({
     email: z.string().email('Invalid email format').optional(),
 
     feedback: z.string().min(1, 'Feedback cannot be empty').trim().optional(),
+
+    rating: z
+      .number()
+      .min(1, 'Rating must be at least 1')
+      .max(5, 'Rating cannot be more than 5')
+      .optional(),
   }),
 });
 
