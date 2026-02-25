@@ -1,12 +1,8 @@
 import { Router } from 'express';
 import { UserRoutes } from '../modules/users/user.route';
 import { AuthRoutes } from '../modules/auth/auth.route';
-import { projectRoutes } from '../modules/projects/project.routes';
-import { skillsRoutes } from '../modules/skills/skills.routes';
-import { BlogRoutes } from '../modules/blogs/blogs.routes';
-import { ExperienceRoutes } from '../modules/experience/experience.routes';
-import { CertificateRoutes } from '../modules/certificates/certificates.routes';
-import { BlogFeedbackRoutes } from '../modules/blogs_feedback/blogs_feedback.routes';
+
+import { FeedbackRoutes } from '../modules/feedback/feedback.routes';
 
 const router = Router();
 
@@ -19,29 +15,10 @@ const moduleRoutes = [
     path: '/users',
     route: UserRoutes,
   },
-  {
-    path: '/projects',
-    route: projectRoutes,
-  },
-  {
-    path: '/skills',
-    route: skillsRoutes,
-  },
-  {
-    path: '/blogs',
-    route: BlogRoutes,
-  },
+
   {
     path: '/feedbacks',
-    route: BlogFeedbackRoutes,
-  },
-  {
-    path: '/experiences',
-    route: ExperienceRoutes,
-  },
-  {
-    path: '/certificates',
-    route: CertificateRoutes,
+    route: FeedbackRoutes,
   },
 ];
 

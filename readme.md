@@ -1,34 +1,45 @@
-# Portfolio Site
+# Welcome to Ramadan Timer project
 
-Netlify: [![Live Site](https://img.shields.io/badge/Live%20Site-Portfolio%20Site-brightgreen)](https://towfiq-portfolio.netlify.app)
+## Project info
 
-Welcome to my portfolio site! This repository contains the source code for my personal portfolio, showcasing my projects and skills as a MERN stack developer.
+**URL**: https://ramadantimer-rosy.vercel.app/
 
-## Overview
+Follow these steps:
 
-This portfolio site serves as a platform to showcase my work, skills, and experience in web development. It includes details about my projects, my skills, and a way to contact me.
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
 
-## Features
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
 
-- **Project Showcase**: A collection of my projects with descriptions, live links, and source code links.
-- **Skills**: A detailed list of my technical skills.
-- **Contact**: A contact form to get in touch with me.
-- **Responsive Design**: Ensures usability across different devices and screen sizes.
+# Step 3: Install the necessary dependencies.
+npm i
 
-## Technologies Used
+# Step 4: Start the development server with auto-reloading and an instant preview.
+npm run dev
+```
 
-- **React**: For building the user interface.
-- **Firebase**: For hosting the live site.
-- **Tailwind CSS**: For styling the components.
-- **React Router**: For client-side routing.
-- **Node.js**: For the server-side logic.
-- **MongoDB**: For the database.
+**Edit a file directly in GitHub**
 
-## Installation
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
 
-To run the project locally, follow these steps:
+**Use GitHub Codespaces**
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/trrabby/portfolio-server-for-NextJS-portfolio.git
-   ```
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
+
+## What technologies are used for this project?
+
+This project is built with:
+
+- Vite
+- TypeScript
+- React
+- shadcn-ui
+- Tailwind CSS
