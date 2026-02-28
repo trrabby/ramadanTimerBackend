@@ -4,7 +4,6 @@ import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 import customizedMsg from '../../utils/customisedMsg';
 import AppError from '../../errorHandlers/AppError';
-import { USER_ROLE } from '../users/user.constant';
 import { FeedbackServices } from './Feedback.services';
 
 /**
@@ -66,31 +65,13 @@ const getOneById = catchAsync(async (req, res) => {
  */
 const updateOneById = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const { feedback } = JSON.parse(req.body.data);
+  const payload = JSON.parse(req.body.data);
+  // console.log(payload);
 
-  if (!feedback || feedback.trim() === '') {
+  if (!payload.feedback || payload.feedback.trim() === '') {
     throw new AppError(httpStatus.BAD_REQUEST, 'Feedback cannot be empty');
   }
-
-  const existingFeedback = await FeedbackServices.getOneById(id);
-
-  if (!existingFeedback) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Feedback not found');
-  }
-
-  const sameAuthor =
-    existingFeedback.email && existingFeedback.email === req?.user?.email;
-
-  if (req?.user?.role !== USER_ROLE.admin && !sameAuthor) {
-    throw new AppError(
-      httpStatus.UNAUTHORIZED,
-      'You are not authorized to update this feedback',
-    );
-  }
-
-  const result = await FeedbackServices.updateOneById(id, {
-    feedback,
-  });
+  const result = await FeedbackServices.updateOneById(id, payload);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -106,29 +87,13 @@ const updateOneById = catchAsync(async (req, res) => {
 const deleteOneById = catchAsync(async (req, res) => {
   const { id } = req.params;
 
-  const existingFeedback = await FeedbackServices.getOneById(id);
-
-  if (!existingFeedback) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Feedback not found');
-  }
-
-  const sameAuthor =
-    existingFeedback.email && existingFeedback.email === req?.user?.email;
-
-  if (req?.user?.role !== USER_ROLE.admin && !sameAuthor) {
-    throw new AppError(
-      httpStatus.UNAUTHORIZED,
-      'You are not authorized to delete this feedback',
-    );
-  }
-
-  await FeedbackServices.deleteOneById(id);
+  const result = await FeedbackServices.deleteOneById(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Feedback deleted successfully',
-    data: null,
+    data: result,
   });
 });
 
